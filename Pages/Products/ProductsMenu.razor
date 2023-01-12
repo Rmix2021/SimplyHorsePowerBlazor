@@ -1,5 +1,114 @@
-﻿<h3>ProductsMenu</h3>
+﻿@page "/productsMenu"
+@using SimplyHorsePower.Data
+@inject ProductService productService
+@inject CategoryService categoryService
+@inject MakeService makeService
+@inject NavigationManager NavigationManager
+
+<h3>ProductsMenu</h3>
+
+    <NavLink class="nav-link" href="AddProduct">
+        <button class="btn btn-primary">Add new Product</button>
+    </NavLink>
+    <NavLink class="nav-link" href="EditPricesByMakeCat">
+        <button class="btn btn-primary">Edit Product bulk pricing</button>
+    </NavLink>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form method="post" asp-page-handler="Submit">
+                <label>Brands</label>
+                <select asp-items="Model.MakeDropdownList" asp-for="makeName"></select><br />
+                <label>Categories</label>
+                <select asp-items="Model.CategoryDropdownList" asp-for="categoryName"></select><br />
+                <input type="button" class="btn btn-danger" @onclick="@SortDropdown" value="Sort" />
+            </form>
+            <div></div>
+            <form method="get">
+                <input type="button" class="btn btn-warning" @onclick="@Cancel" value="Reset">
+            </form>
+            
+        </div>
+
+        <div class="products">
+            <div class="row no-gutters">
+
+            @if (products != null)
+            {
+
+                @foreach (var product in products)
+                {
+                    <div class="col-md-3 mt-3 card flex-fill card-box card-body bg-light text-center">
+                        <div class="card-img-actions card-thumbnail">
+                            <img src="data:image/gif;base64,@product.MainBase64Image" class="card-img img-fluid">
+                        </div>
+                        <div class="container-fluid flex-fill"></div>
+                        <h3><a href="#" class="mt-2 text-danger">@product.ProductName</a></h3>
+                            <p class="text-secondary">@product.ProductDescription</p>
+                            <a type="button" href="DeleteProduct/@product.ProductId"><span class="oi oi-pencil" aria-hidden="true">Remove</span></a>
+                            <a type="button" href="EditProduct/@product.ProductId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
+
+                        <a type="button" href="/ProductGalleryImages/ProductGalleryImagesMenu@product.ProductId" class="btn btn-success float-left">Photo Gallery Menu</a>
+                    </div>
+                }
+            }
+            else
+            {
+              
+                    <div>
+                        <h1>No Products yet!</h1>
+                        </div>
+              
+            }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @code {
+    private List<Product> products;
 
+    public string makeName { get; set; }
+    public string categoryName { get; set; }
+    public List<SelectListItem> CategoryDropdownList { get; set; } = new List<SelectListItem>();
+    public List<SelectListItem> MakeDropdownList { get; set; } = new List<SelectListItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        CategoryDropdownList = await categoryService.CategoryDropDownListAsync();
+        CategoryDropdownList.Insert(0, new SelectListItem("Select one", null, false));
+        MakeDropdownList = await makeService.MakeDropDownListAsync();
+        MakeDropdownList.Insert(0, new SelectListItem("Select one", null, false));
+        products = await productService.GetAllProductsAsync();
+    }  
+
+    protected async Task SortDropdown()
+    {
+        if (makeName != "Select one" && categoryName == "Select one")
+        {
+            products = await productService.GetFilteredProductsByMakeAsync(makeName);
+        }
+        else if (categoryName != "Select one" && makeName == "Select one")
+        {
+            products = await productService.GetFilteredProductsByCategoryAsync(categoryName);
+        }
+        else if (makeName != "Select one" && categoryName != "Select one")
+        {
+            products = await productService.GetFilteredProductsByCatMakeAsync(categoryName, makeName);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("./ProductsMenu");
+        }
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./ProductsMenu");
+    }
 }

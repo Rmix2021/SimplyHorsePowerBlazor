@@ -19,20 +19,21 @@
             _context.Add(category);
             _context.SaveChanges();
         }
-        public List<Category> GetAllCategories()
-        {
-            var categoryList = _context.Categories.ToList();
-            return categoryList;
-        }
-
         public Category GetACategory( int id)
         {
             return this._context.Categories.Where(x => x.CategoryID == id).FirstOrDefault();
         }
-        public List<SelectListItem> CategoryDropDownList()
+      
+        public async Task<List<Category>> GetAllCategoriesAsync()
+        {
+            var categoryList = await _context.Categories.ToListAsync();
+            return categoryList;
+        }
+
+        public async Task<List<SelectListItem>> CategoryDropDownListAsync()
         {
             List<SelectListItem> DropDownList = new List<SelectListItem>();
-            Categories = GetAllCategories();
+            Categories = await GetAllCategoriesAsync();
             foreach (var category in Categories)
             {
                 DropDownList.Add(new SelectListItem { Value = category.CategoryName, Text = category.CategoryName });

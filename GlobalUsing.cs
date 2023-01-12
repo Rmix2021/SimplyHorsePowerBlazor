@@ -34,10 +34,6 @@ global using System.Linq;
 global using System.Security.Claims;
 global using System.Threading.Tasks;
 
-
-
-
-
 namespace SimplyHorsePower
 {
     public class GlobalUsing

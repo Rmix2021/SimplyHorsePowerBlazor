@@ -1,14 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
-using SimplyHorsePower.Areas.Identity;
-using SimplyHorsePower.Data;
-using System.Security.Claims;
-using SimplyHorsePower.Authorization;
-
 var builder = WebApplication.CreateBuilder(args);
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
 // Add services to the container.
@@ -36,6 +25,14 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<MakeService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ProductGalleryImageService>();
+builder.Services.AddScoped<ShoppingCartService>();
+builder.Services.AddScoped<CartItemService>();
+builder.Services.AddScoped<CustomerBuildsService>();
+builder.Services.AddScoped<BuildGalleryImageService>();
 
 var app = builder.Build();
 

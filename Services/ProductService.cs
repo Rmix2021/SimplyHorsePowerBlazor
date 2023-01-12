@@ -1,14 +1,16 @@
-﻿namespace SimplyHorsePower.Services
+﻿
+
+namespace SimplyHorsePower.Services
 {
     public class ProductService
     {
         readonly ApplicationDbContext _context;
-        readonly ILogger _logger;
+       
 
         public ProductService(ApplicationDbContext context, ILoggerFactory factory)
         {
             this._context = context;
-            this._logger = factory.CreateLogger<ProductService>();
+          
         }
 
         public Product AddNewProduct(AddProduct name)
@@ -17,69 +19,71 @@
             _context.Add(product);
             _context.SaveChanges();
             return product;
+        }       
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+            var productList = await _context.Products.ToListAsync();
+            return productList;
+        }
+      
+        public async Task<Product> GetAProductAsync(int Id)
+        {
+        Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId.Equals(Id));
+            return product;
         }
 
-        public List<Product> GetAllProducts()
+        public async Task<List<Product>> GetFilteredProductsByMakeAsync(string makename)
         {
-            var productList = _context.Products.ToList();
+            var productList = await this._context.Products.Where(x =>x.MakeName == makename).ToListAsync();
             return productList;
         }
 
-        public Product GetAProduct(int ?id)
+        public async Task<List<Product>> GetFilteredProductsByCategoryAsync(string categoryname)
+        {        
+            var productList = await this._context.Products.Where(x=>x.CategoryName == categoryname).ToListAsync();
+            return productList;
+        }
+
+        public async Task<List<Product>> GetFilteredProductsByCatMakeAsync(string categoryname, string makename)
         {
-            return this._context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+            var productList = await this._context.Products.Where(x=>x.CategoryName == categoryname).Where(x=>x.MakeName == makename).ToListAsync();
+            return productList;            
         }
 
-        public List<Product> GetFilteredProductsByMake(string makename)
-        {
-            
-            return this._context.Products.Where(x => x.MakeName == makename).ToList();
-        }
-
-        public List<Product> GetFilteredProductsByCategory(string categoryname)
-        {            
-            return this._context.Products.Where(x => x.CategoryName == categoryname).ToList();
-        }
-
-        public List<Product> GetFilteredProductsByCatMake(string categoryname, string makename)
-        {
-            return this._context.Products.Where(x => x.CategoryName == categoryname).Where(x => x.MakeName == makename).ToList();             
-        }
-
-        public void UpdateProduct(int productid, string productname, double productprice, string productdescription )
+        public async void UpdateProductAsync(int productid, string productname, double productprice, string productdescription )
         {
             var updateProduct = _context.Products.Find(productid);
             updateProduct.ProductName = productname;
             updateProduct.ProductPrice = productprice;
             updateProduct.ProductDescription = productdescription;
-            _context.SaveChanges();
-
+            await _context.SaveChangesAsync();           
         }
 
-        public void UpdatePricingByMake(string makename, double percentAdjust)
+        public async void UpdatePricingByMakeAsync(string makename, double percentAdjust)
         {
-            List<Product> ProductList = GetFilteredProductsByMake(makename);
+            var ProductList =await GetFilteredProductsByMakeAsync(makename);
+            foreach (var product in ProductList)
+            {
+                product.ProductPrice = product.ProductPrice * percentAdjust;
+                await _context.SaveChangesAsync();
+                
+            }
+            
+        }
+
+        public async void UpdatePricingByCategory(string categoryname, double percentAdjust)
+        {
+            var ProductList = await GetFilteredProductsByCategoryAsync(categoryname);
             foreach (var product in ProductList)
             {
                 product.ProductPrice = product.ProductPrice * percentAdjust;
                 _context.SaveChanges();
             }
-           
         }
 
-        public void UpdatePricingByCategory(string categoryname, double percentAdjust)
+        public async void UpdatePricingByMakeCatAsync(string categoryname, string makename, double percentAdjust)
         {
-            List<Product> ProductList = GetFilteredProductsByCategory(categoryname);
-            foreach (var product in ProductList)
-            {
-                product.ProductPrice = product.ProductPrice * percentAdjust;
-                _context.SaveChanges();
-            }
-        }
-
-        public void UpdatePricingByMakeCat(string categoryname, string makename, double percentAdjust)
-        {
-            List<Product> ProductList = GetFilteredProductsByCatMake(categoryname, makename);
+            var ProductList = await GetFilteredProductsByCatMakeAsync(categoryname, makename);
             foreach (var product in ProductList)
             {
                 product.ProductPrice = product.ProductPrice * percentAdjust;
