@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SimplyHorsePower.Data;
-using SimplyHorsePower.Models;
-using Microsoft.Extensions.Logging;
-
-namespace SimplyHorsePower.Services
+﻿namespace SimplyHorsePower.Services
 {
     public class ProductService
     {

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
-namespace SimplyHorsePower.Data
+﻿namespace SimplyHorsePower.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
