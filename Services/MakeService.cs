@@ -32,7 +32,14 @@
             var makeList = await _context.Makes.ToListAsync();
             return makeList;
         }
-      
+
+        public async Task<bool> UpdateMakeAsync(Make make)
+        {
+            _context.Makes.Update(make);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<SelectListItem>> MakeDropDownListAsync()
         {
             List<SelectListItem> DropDownList = new List<SelectListItem>();
@@ -43,6 +50,11 @@
             }
             return DropDownList;
         }
-      
+        public async Task<bool> DeleteMakeAsync(Make make)
+        {
+            _context.Remove(make);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

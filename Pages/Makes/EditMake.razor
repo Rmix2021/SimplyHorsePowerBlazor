@@ -1,5 +1,42 @@
-﻿<h3>EditMake</h3>
+﻿@page "/EditMake/{Id}"
+@using SimplyHorsePower.Data
+@inject MakeService makeService
+@inject ApplicationDbContext _context
+@inject NavigationManager NavigationManager
+
+
+<h3>Edit Make</h3>
+
+
+
+<form method="post" asp-page-handler="Submit">
+    <label>Make Name:</label>
+    <input type="text" @bind="makeObject.MakeName">
+    <input type="hidden" @bind="makeObject.MakeId" />
+    <input type="button" class="btn btn-primary" @onclick="@UpdateMake" value="Save" />
+    <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+</form>
 
 @code {
 
+    [Parameter]
+    public string Id { get; set; }
+
+    Make makeObject = new Make();
+
+    protected override async Task OnInitializedAsync()
+    {
+        makeObject = await Task.Run(() => makeService.GetAMakeAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void UpdateMake()
+    {
+        await makeService.UpdateMakeAsync(makeObject);
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
 }

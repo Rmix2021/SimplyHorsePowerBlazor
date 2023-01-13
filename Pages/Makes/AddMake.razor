@@ -1,5 +1,31 @@
-﻿<h3>AddMake</h3>
+﻿@page "/AddMake"
+@using SimplyHorsePower.Data
+@inject MakeService makeService
+@inject NavigationManager NavigationManager
+
+<h3>Add Make</h3>
+<div>
+    <form asp-page-handler="Submit">
+        <label>Make Name:</label>
+        <input type="text" @bind="makeObject.MakeName">
+        <input type="button" class="btn btn-primary" @onclick="@CreateNewMakeAsync" value="Save" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" /><br />
+    </form>
+</div>
+
 
 @code {
+    Make makeObject = new Make();
 
+    protected async void CreateNewMakeAsync()
+    {
+
+        await makeService.AddNewMakeAsync(makeObject);
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
 }

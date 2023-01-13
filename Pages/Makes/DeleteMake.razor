@@ -1,5 +1,40 @@
-﻿<h3>DeleteMake</h3>
+﻿@page "/DeleteMake/{Id}"
+@using SimplyHorsePower.Data
+@inject MakeService makeService
+@inject ApplicationDbContext _context
+@inject NavigationManager NavigationManager
+
+
+<h3>Delete Make</h3>
+<h3>@makeObject.MakeName</h3>
+<h3>Are you sure want to delete this?</h3>
+
+<form asp-page-handler="Submit">
+    <input type="hidden" asp-for="@makeObject.MakeId" />
+    <input type="button" class="btn btn-danger" @onclick="@RemoveMake" value="Delete" />
+    <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+</form>
 
 @code {
 
+    [Parameter]
+    public string Id { get; set; }
+
+    Make makeObject = new Make();
+
+    protected override async Task OnInitializedAsync()
+    {
+        makeObject = await Task.Run(() => makeService.GetAMakeAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void RemoveMake()
+    {
+        await makeService.DeleteMakeAsync(makeObject);
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./MakesMenu");
+    }
 }

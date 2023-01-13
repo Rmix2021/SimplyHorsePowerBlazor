@@ -24,13 +24,14 @@
             await _context.SaveChangesAsync();       ;
             return true;
         }
+
         public async Task<bool> UpdateCategoryAsync(Category category)
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             return true;
-
         }
+
         public async Task<Category>  GetACategoryAsync( int id)
         {
             Category category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryID.Equals(id));

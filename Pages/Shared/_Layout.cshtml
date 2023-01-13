@@ -87,6 +87,15 @@
                 integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj">
         </script>
         <script src="~/Identity/js/site.js" asp-append-version="true"></script>
+        <script type="text/javascript">
+            //Stop Form Submission of Enter Key Press
+            function stopRKey(evt) {
+                var evt = (evt) ? evt : ((event) ? event : null);
+                var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+                if ((evt.keyCode == 13) && (node.type == "text")) { return false; }
+            }
+            document.onkeypress = stopRKey;
+        </script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)

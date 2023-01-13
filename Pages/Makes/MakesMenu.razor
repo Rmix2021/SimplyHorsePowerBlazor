@@ -1,5 +1,51 @@
-﻿<h3>MakesMenu</h3>
+﻿@page "/MakesMenu"
+@using SimplyHorsePower.Data
+@inject MakeService makeService
+@inject NavigationManager NavigationManager
+
+<h3>Makes Menu</h3>
+
+<NavLink class="nav-link" href="AddMake">
+    <button class="btn btn-primary">Add A New Make</button>
+</NavLink>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Makes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Makes != null)
+            {
+                @foreach (var make in Makes)
+                {
+                    <tr>
+                        <td class="align-middle">@make.MakeName</td>
+                        <td><a class="btn btn-danger" href="EditMake/@make.MakeId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a></td>
+                        <td><a class="btn btn-danger" href="DeleteMake/@make.MakeId"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>No Makes yet!</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
+
+    private List<Make> Makes { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Makes = await makeService.GetAllMakesAsync();
+    }
 
 }
