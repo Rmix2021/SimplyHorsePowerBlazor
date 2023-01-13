@@ -12,13 +12,13 @@
             this._logger = factory.CreateLogger<CustomerBuildsService>();
         }
 
-        public CustomerBuild AddNewCustomerBuild(AddCustomerBuild name)
-        {
-            var customerBuild = name.ToCustomerBuild();
-            _context.Add(customerBuild);
-            _context.SaveChanges();
-            return customerBuild;
-        }
+        //public CustomerBuild AddNewCustomerBuild(AddCustomerBuild name)
+        //{
+        //    var customerBuild = name.ToCustomerBuild();
+        //    _context.Add(customerBuild);
+        //    _context.SaveChanges();
+        //    return customerBuild;
+        //}
 
         public List<CustomerBuild> GetAllCustomerBuilds()
         {

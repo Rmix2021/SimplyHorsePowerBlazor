@@ -13,16 +13,20 @@
             this._context = context;
             _logger = factory.CreateLogger<MakeService>();
         }
-        public void AddNewMake(AddMake name)
+
+        public async Task<bool> AddNewMakeAsync(Make name)
         {
-            var make = name.ToMake();
-            _context.Add(make);
-            _context.SaveChanges();
+            await _context.Makes.AddAsync(name);
+            await _context.SaveChangesAsync();
+            return true;
         }
-        public Make GetAMake(int id)
+
+        public async Task<Make> GetAMakeAsync(int Id)
         {
-            return this._context.Makes.Where(x => x.MakeId == id).FirstOrDefault();
+            Make make = await _context.Makes.FirstOrDefaultAsync(c => c.MakeId.Equals(Id));
+            return make;
         }
+   
         public async Task<List<Make>> GetAllMakesAsync()
         {
             var makeList = await _context.Makes.ToListAsync();

@@ -12,13 +12,13 @@
             this._logger = factory.CreateLogger<ShoppingCartService>();
         }
 
-        public ShoppingCart AddNewShoppingCart(ShoppingCart shoppingcart)
-        {            
-            _context.Add(shoppingcart);
-            _context.SaveChanges();
-            return shoppingcart;
+   
+        public async Task<bool> AddNewShoppingCartAsync(ShoppingCart shoppingcart)
+        {
+            await _context.ShoppingCarts.AddAsync(shoppingcart);
+            await _context.SaveChangesAsync();
+            return true;
         }
-              
 
         public ShoppingCart GetAShoppingCart(string userName)
         {

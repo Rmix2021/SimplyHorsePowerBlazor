@@ -1,4 +1,4 @@
-﻿@page "/productsMenu"
+﻿@page "/ProductsMenu"
 @using SimplyHorsePower.Data
 @inject ProductService productService
 @inject CategoryService categoryService
@@ -70,11 +70,15 @@
 
 
 @code {
+   
     private List<Product> products;
-
+    [BindProperty]
     public string makeName { get; set; }
+    [BindProperty]
     public string categoryName { get; set; }
+    [BindProperty]
     public List<SelectListItem> CategoryDropdownList { get; set; } = new List<SelectListItem>();
+    [BindProperty]
     public List<SelectListItem> MakeDropdownList { get; set; } = new List<SelectListItem>();
 
 

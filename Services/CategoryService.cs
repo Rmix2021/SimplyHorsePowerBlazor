@@ -6,26 +6,39 @@
 
         readonly ApplicationDbContext _context;
 
-        readonly ILogger _logger;
+
+        public async Task<bool> DeleteCategoryAsync(Category category)
+        {
+            _context.Remove(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
         public CategoryService(ApplicationDbContext context, ILoggerFactory factory)
         {
             this._context = context;
-            _logger = factory.CreateLogger<CategoryService>();
         }
-        public void AddNewCategory(AddCategory name)
+        public async Task<bool> AddNewCategoryAsync(Category name)
         {
-            var category = name.ToCategory();
-            _context.Add(category);
-            _context.SaveChanges();
+            await _context.Categories.AddAsync(name);
+            await _context.SaveChangesAsync();       ;
+            return true;
         }
-        public Category GetACategory( int id)
+        public async Task<bool> UpdateCategoryAsync(Category category)
         {
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+        public async Task<Category>  GetACategoryAsync( int id)
+        {
+            Category category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryID.Equals(id));
             return this._context.Categories.Where(x => x.CategoryID == id).FirstOrDefault();
         }
       
         public async Task<List<Category>> GetAllCategoriesAsync()
-        {
+        { 
             var categoryList = await _context.Categories.ToListAsync();
             return categoryList;
         }
@@ -40,5 +53,7 @@
             }
             return DropDownList;
         }
+
+     
     }
 }

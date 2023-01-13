@@ -4,27 +4,26 @@
     {
 
         readonly ApplicationDbContext _context;
-        readonly ILogger _logger;
+    
 
         public ProductGalleryImageService(ApplicationDbContext context, ILoggerFactory factory)
         {
             this._context = context;
-            this._logger = factory.CreateLogger<ProductGalleryImageService>();
         }
 
-        public ProductGalleryImage AddNewProductGalleryImage(AddProductGalleryImage name)
+        public async Task<bool> AddNewProductGalleryImage(ProductGalleryImage name)
         {
-            var productGalleryImage = name.ToProductGalleryImage();
-            _context.Add(productGalleryImage);
-            _context.SaveChanges();
-            return productGalleryImage;
+            await _context.productGalleryImages.AddAsync(name);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public List<ProductGalleryImage> GetAllFilteredProductGalleryImages(int id)
+    
+        public  List<ProductGalleryImage> GetAllFilteredProductGalleryImages(int id)
         {
             List<ProductGalleryImage> productGalleryImages = new List<ProductGalleryImage>();
-            var productGalleryImageList = _context.productGalleryImages
-               .Where(x => x.ProductId == id);
+            var productGalleryImageList = _context.productGalleryImages.Where(x => x.ProductId == id);
+
             foreach (var productGalleryImage in productGalleryImageList)
             {
                 productGalleryImages.Add(productGalleryImage);
@@ -32,10 +31,12 @@
             return productGalleryImages;
         }
 
-        public ProductGalleryImage GetAProductGalleryImage(int id)
+        public async Task<ProductGalleryImage> GetAProductGalleryImageAsync(int Id)
         {
-            return this._context.productGalleryImages.Where(x => x.ProductGalleryImageId == id).FirstOrDefault();
-        }       
+            ProductGalleryImage productGalleryImage = await _context.productGalleryImages.FirstOrDefaultAsync(c => c.ProductGalleryImageId.Equals(Id));
+            return productGalleryImage;
+        }
+      
 
     }
 }

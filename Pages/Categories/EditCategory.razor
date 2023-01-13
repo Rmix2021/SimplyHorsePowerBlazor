@@ -1,5 +1,42 @@
-﻿<h3>EditCategory</h3>
+﻿@page "/EditCategory/{Id}"
+@using SimplyHorsePower.Data
+@inject CategoryService categoryService
+@inject ApplicationDbContext _context
+@inject NavigationManager NavigationManager
+
+
+<h3>Edit Category</h3>
+
+
+
+<form method="post" asp-page-handler="Submit">
+    <label>Category Name:</label>
+    <input type="text" @bind="categorytObject.CategoryName">
+    <input type="hidden" @bind="categorytObject.CategoryID" />
+    <input type="button" class="btn btn-primary" @onclick="@UpdateCategory" value="Save" />
+    <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+</form>
 
 @code {
 
+    [Parameter]
+    public string Id { get; set; }
+
+    Category categorytObject = new Category();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categorytObject = await Task.Run(() => categoryService.GetACategoryAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void UpdateCategory()
+    {
+        await categoryService.UpdateCategoryAsync(categorytObject);
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
 }

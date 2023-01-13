@@ -1,5 +1,40 @@
-﻿<h3>DeleteProduct</h3>
+﻿@page "/DeleteProject/{Id}"
+@using SimplyHorsePower.Data
+@inject ProductService productService
+@inject NavigationManager NavigationManager
+
+<h3>DeleteProduct</h3>
+<h3>@productObject.ProductName</h3>
+<h3>Are you sure want to delete this?</h3>
+
+<div>
+    <form method="post" asp-page-handler="Delete">
+        <input type="hidden" asp-for="@productObject.ProductId" />
+        <input type="button" class="btn btn-danger" @onclick="@RemoveProduct" value="Delete" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />           
+    </form>
+</div>
+
+
+
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
 
+    Product productObject = new Product();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productObject = await Task.Run(() => productService.GetAProductAsync(Convert.ToInt32(Id)));
+    }
+    protected async void RemoveProduct()
+    {
+        await productService.DeleteProductAsync(productObject);
+        NavigationManager.NavigateTo("./productsMenu");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./productsMenu");
+    }
 }

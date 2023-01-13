@@ -12,14 +12,20 @@ namespace SimplyHorsePower.Services
             this._context = context;
           
         }
-
-        public Product AddNewProduct(AddProduct name)
+        public async Task<bool> AddNewProductAsync(Product name)
         {
-            var product = name.ToProduct();
-            _context.Add(product);
-            _context.SaveChanges();
-            return product;
-        }       
+            await _context.Products.AddAsync(name);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+  
+        public async Task<bool> DeleteProductAsync(Product product)
+        {
+            _context.Remove(product);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<Product>> GetAllProductsAsync()
         {
             var productList = await _context.Products.ToListAsync();
@@ -71,7 +77,7 @@ namespace SimplyHorsePower.Services
             
         }
 
-        public async void UpdatePricingByCategory(string categoryname, double percentAdjust)
+        public async void UpdatePricingByCategoryAsync(string categoryname, double percentAdjust)
         {
             var ProductList = await GetFilteredProductsByCategoryAsync(categoryname);
             foreach (var product in ProductList)

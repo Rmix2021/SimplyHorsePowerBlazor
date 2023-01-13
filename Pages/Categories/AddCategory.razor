@@ -1,5 +1,31 @@
-﻿<h3>AddCategory</h3>
+﻿@page "/AddCategory"
+@using SimplyHorsePower.Data
+@inject CategoryService categoryService
+@inject NavigationManager NavigationManager
+
+<h3>AddCategory</h3>
+<div>
+    <form  asp-page-handler="Submit">
+        <label>Category Name:</label>
+        <input type="text" @bind="categoryObject.CategoryName">
+        <input type="button" class="btn btn-primary" @onclick="@CreateNewCategoryAsync" value="Save" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" /><br />
+    </form>
+</div>
+
 
 @code {
+    Category categoryObject = new Category();
 
+    protected async void CreateNewCategoryAsync()
+    {
+        
+        await categoryService.AddNewCategoryAsync(categoryObject);
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
 }

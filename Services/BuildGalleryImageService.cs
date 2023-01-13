@@ -11,12 +11,19 @@
             this._logger = factory.CreateLogger<BuildGalleryImageService>();
         }
 
-        public BuildGalleryImage AddNewBuildGalleryImage(AddCustomerBuildGalleryImage name)
+
+        public async Task<bool> AddNewProductAsync(Product name)
         {
-            var buildGalleryImage = name.ToBuildGalleryImage();
-            _context.Add(buildGalleryImage);
-            _context.SaveChanges();
-            return buildGalleryImage;
+            await _context.Products.AddAsync(name);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> AddNewBuildGalleryImageAsync(BuildGalleryImage name)
+        {
+            await _context.buildGalleryImages.AddAsync(name);           
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public List<BuildGalleryImage> GetAllFilteredBuildGalleryImages(int id)

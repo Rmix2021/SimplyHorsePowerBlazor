@@ -20,7 +20,6 @@ global using Microsoft.IdentityModel;
 global using SimplyHorsePower.Areas.Identity;
 global using SimplyHorsePower.Authorization;
 global using SimplyHorsePower.Data;
-global using SimplyHorsePower.Models;
 global using SimplyHorsePower.Services;
 global using System;
 global using System.Collections.Generic;

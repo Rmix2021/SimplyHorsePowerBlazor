@@ -1,5 +1,51 @@
-﻿<h3>CategoryMenu</h3>
+﻿@page "/CategoryMenu"
+@using SimplyHorsePower.Data
+@inject CategoryService categoryService
+@inject NavigationManager NavigationManager
+
+<h3>CategoryMenu</h3>
+
+<NavLink class="nav-link" href="AddCategory">
+    <button class="btn btn-primary">Add A New Category</button>
+</NavLink>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Categories</th>
+            </tr>
+        </thead>
+        <tbody>
+             @if (Categories != null)
+                {
+                    @foreach (var category in Categories)
+                    {
+                        <tr>
+                            <td class="align-middle">@category.CategoryName</td>
+                        <td><a class="btn btn-danger" href="EditCategory/@category.CategoryID"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a></td>
+                        <td><a class="btn btn-danger" href="DeleteCategory/@category.CategoryID"><span class="oi oi-pencil" aria-hidden="true">Delete</span></a></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                <tr>
+                    <td>No Categories yet!</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
+  
+    private List<Category> Categories { get; set; }
 
+ 
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await categoryService.GetAllCategoriesAsync();
+    }
+ 
 }

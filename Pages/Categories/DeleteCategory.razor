@@ -1,5 +1,40 @@
-﻿<h3>DeleteCategory</h3>
+﻿@page "/DeleteCategory/{Id}"
+@using SimplyHorsePower.Data
+@inject CategoryService categoryService
+@inject ApplicationDbContext _context
+@inject NavigationManager NavigationManager
+
+
+<h3>DeleteCategory</h3>
+<h3>@categorytObject.CategoryName</h3>
+<h3>Are you sure want to delete this?</h3>
+
+  <form asp-page-handler="Submit">
+    <input type="hidden" asp-for="@categorytObject.CategoryID" />
+    <input type="button" class="btn btn-danger" @onclick="@RemoveCategory" value="Delete" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />     
+</form>
 
 @code {
 
+    [Parameter]
+    public string Id { get; set; }
+
+    Category categorytObject = new Category();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categorytObject = await Task.Run(() => categoryService.GetACategoryAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void RemoveCategory()
+    {
+        await categoryService.DeleteCategoryAsync(categorytObject);
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./CategoryMenu");
+    }
 }
