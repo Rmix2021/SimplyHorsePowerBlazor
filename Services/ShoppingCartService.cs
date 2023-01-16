@@ -4,12 +4,10 @@
     {
 
         readonly ApplicationDbContext _context;
-        readonly ILogger _logger;
 
         public ShoppingCartService(ApplicationDbContext context, ILoggerFactory factory)
         {
             this._context = context;
-            this._logger = factory.CreateLogger<ShoppingCartService>();
         }
 
    

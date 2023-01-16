@@ -34,8 +34,8 @@
 
         public async Task<Category>  GetACategoryAsync( int id)
         {
-            Category category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryID.Equals(id));
-            return this._context.Categories.Where(x => x.CategoryID == id).FirstOrDefault();
+            Category category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId.Equals(id));
+            return this._context.Categories.Where(x => x.CategoryId == id).FirstOrDefault();
         }
       
         public async Task<List<Category>> GetAllCategoriesAsync()
@@ -44,16 +44,16 @@
             return categoryList;
         }
 
-        public async Task<List<SelectListItem>> CategoryDropDownListAsync()
-        {
-            List<SelectListItem> DropDownList = new List<SelectListItem>();
-            Categories = await GetAllCategoriesAsync();
-            foreach (var category in Categories)
-            {
-                DropDownList.Add(new SelectListItem { Value = category.CategoryName, Text = category.CategoryName });
-            }
-            return DropDownList;
-        }
+        //public async Task<List<SelectListItem>> CategoryDropDownListAsync()
+        //{
+        //    List<SelectListItem> DropDownList = new List<SelectListItem>();
+        //    Categories = await GetAllCategoriesAsync();
+        //    foreach (var category in Categories)
+        //    {
+        //        DropDownList.Add(new SelectListItem { Value = category.CategoryID.ToString(), Text = category.CategoryName });
+        //    }
+        //    return DropDownList;
+        //}
 
      
     }

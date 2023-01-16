@@ -10,7 +10,7 @@
 <h3>Are you sure want to delete this?</h3>
 
   <form asp-page-handler="Submit">
-    <input type="hidden" asp-for="@categorytObject.CategoryID" />
+    <input type="hidden" asp-for="@categorytObject.CategoryId" />
     <input type="button" class="btn btn-danger" @onclick="@RemoveCategory" value="Delete" />
         <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />     
 </form>

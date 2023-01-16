@@ -4,14 +4,12 @@
     {
         public List<Make> Makes { get; set; }
 
-        readonly ApplicationDbContext _context;
+        readonly ApplicationDbContext _context; 
 
-        readonly ILogger _logger;
-
-        public MakeService(ApplicationDbContext context, ILoggerFactory factory)
+        public MakeService(ApplicationDbContext context)
         {
             this._context = context;
-            _logger = factory.CreateLogger<MakeService>();
+            
         }
 
         public async Task<bool> AddNewMakeAsync(Make name)
@@ -40,16 +38,16 @@
             return true;
         }
 
-        public async Task<List<SelectListItem>> MakeDropDownListAsync()
-        {
-            List<SelectListItem> DropDownList = new List<SelectListItem>();
-            Makes = await GetAllMakesAsync();
-            foreach(var make in Makes)
-            {
-                DropDownList.Add(new SelectListItem { Value = make.MakeName, Text = make.MakeName }); 
-            }
-            return DropDownList;
-        }
+        //public async task<list<selectlistitem>> makedropdownlistasync()
+        //{
+        //    list<selectlistitem> dropdownlist = new list<selectlistitem>();
+        //    makes = await getallmakesasync();
+        //    foreach(var make in makes)
+        //    {
+        //        dropdownlist.add(new selectlistitem { value = make.makeid.tostring(), text = make.makename }); 
+        //    }
+        //    return dropdownlist;
+        //}
         public async Task<bool> DeleteMakeAsync(Make make)
         {
             _context.Remove(make);

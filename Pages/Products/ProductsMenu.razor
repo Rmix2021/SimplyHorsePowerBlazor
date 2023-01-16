@@ -17,13 +17,23 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <form method="post" asp-page-handler="Submit">
-                <label>Brands</label>
-                <select asp-items="Model.MakeDropdownList" asp-for="makeName"></select><br />
-                <label>Categories</label>
-                <select asp-items="Model.CategoryDropdownList" asp-for="categoryName"></select><br />
+           <form method="post" asp-page-handler="Submit">
+              <InputSelect @bind-Value="makeName" class="form-control" style="width:min-content">
+            <option value="">--Select--</option>
+            @foreach (var make in MakeList)
+            {
+                <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
+            }
+        </InputSelect>
+        <InputSelect @bind-Value="categoryName" class="form-control" style="width:min-content">
+            <option value="">--Select--</option>
+            @foreach (var category in CategoryList)
+            {
+                <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
+            }
+        </InputSelect>
                 <input type="button" class="btn btn-danger" @onclick="@SortDropdown" value="Sort" />
-            </form>
+                </form>
             <div></div>
             <form method="get">
                 <input type="button" class="btn btn-warning" @onclick="@Cancel" value="Reset">
@@ -70,38 +80,39 @@
 
 
 @code {
-   
+
     private List<Product> products;
     [BindProperty]
     public string makeName { get; set; }
     [BindProperty]
     public string categoryName { get; set; }
+
     [BindProperty]
-    public List<SelectListItem> CategoryDropdownList { get; set; } = new List<SelectListItem>();
+    public List<Category> CategoryList { get; set; } = new List<Category>();
     [BindProperty]
-    public List<SelectListItem> MakeDropdownList { get; set; } = new List<SelectListItem>();
+    public List<Make> MakeList { get; set; } = new List<Make>();
 
 
     protected override async Task OnInitializedAsync()
     {
-        CategoryDropdownList = await categoryService.CategoryDropDownListAsync();
-        CategoryDropdownList.Insert(0, new SelectListItem("Select one", null, false));
-        MakeDropdownList = await makeService.MakeDropDownListAsync();
-        MakeDropdownList.Insert(0, new SelectListItem("Select one", null, false));
+        MakeList = await makeService.GetAllMakesAsync();
+        //MakeDropdownList.Insert(0, new Make("Select one", null, false));
+        CategoryList = await categoryService.GetAllCategoriesAsync();
+        //CategoryList.Insert(0, new SelectListItem("Select one", null, false));
         products = await productService.GetAllProductsAsync();
     }  
 
     protected async Task SortDropdown()
     {
-        if (makeName != "Select one" && categoryName == "Select one")
+        if (makeName != "Select" && categoryName == "Select")
         {
             products = await productService.GetFilteredProductsByMakeAsync(makeName);
         }
-        else if (categoryName != "Select one" && makeName == "Select one")
+        else if (categoryName != "Select" && makeName == "Select")
         {
             products = await productService.GetFilteredProductsByCategoryAsync(categoryName);
         }
-        else if (makeName != "Select one" && categoryName != "Select one")
+        else if (makeName != "Select" && categoryName != "Select")
         {
             products = await productService.GetFilteredProductsByCatMakeAsync(categoryName, makeName);
         }

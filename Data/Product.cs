@@ -19,11 +19,11 @@
 
         public List<ProductGalleryImage> ProductGalleryImages { get; set; } = new List<ProductGalleryImage>();
 
-        [ForeignKey("CategoryName")]
-        public string CategoryName { get; set; }
+        [ForeignKey("CategoryId")]
+        public string CategoryId { get; set; }
 
-        [ForeignKey("MakeName")]
-        public string MakeName { get; set; }
+        [ForeignKey("MakeId")]
+        public string MakeId { get; set; }      
 
         [NotMapped]
         public string MainBase64Image
@@ -37,5 +37,9 @@
                 return Convert.ToBase64String(this.MainProductImage);
             }
         }
+
+       
+
+
     }
 }

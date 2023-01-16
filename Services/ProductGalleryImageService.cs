@@ -6,7 +6,7 @@
         readonly ApplicationDbContext _context;
     
 
-        public ProductGalleryImageService(ApplicationDbContext context, ILoggerFactory factory)
+        public ProductGalleryImageService(ApplicationDbContext context)
         {
             this._context = context;
         }

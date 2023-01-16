@@ -7,17 +7,12 @@ namespace SimplyHorsePower.Services
         readonly ApplicationDbContext _context;
        
 
-        public ProductService(ApplicationDbContext context, ILoggerFactory factory)
+        public ProductService(ApplicationDbContext context)
         {
             this._context = context;
           
         }
-        public async Task<bool> AddNewProductAsync(Product name)
-        {
-            await _context.Products.AddAsync(name);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+       
   
         public async Task<bool> DeleteProductAsync(Product product)
         {
@@ -38,21 +33,21 @@ namespace SimplyHorsePower.Services
             return product;
         }
 
-        public async Task<List<Product>> GetFilteredProductsByMakeAsync(string makename)
+        public async Task<List<Product>> GetFilteredProductsByMakeAsync(string makeId)
         {
-            var productList = await this._context.Products.Where(x =>x.MakeName == makename).ToListAsync();
+            var productList = await this._context.Products.Where(x =>x.MakeId == makeId).ToListAsync();
             return productList;
         }
 
-        public async Task<List<Product>> GetFilteredProductsByCategoryAsync(string categoryname)
+        public async Task<List<Product>> GetFilteredProductsByCategoryAsync(string categoryId)
         {        
-            var productList = await this._context.Products.Where(x=>x.CategoryName == categoryname).ToListAsync();
+            var productList = await this._context.Products.Where(x=>x.CategoryId == categoryId).ToListAsync();
             return productList;
         }
 
-        public async Task<List<Product>> GetFilteredProductsByCatMakeAsync(string categoryname, string makename)
+        public async Task<List<Product>> GetFilteredProductsByCatMakeAsync(string categoryId, string makeId)
         {
-            var productList = await this._context.Products.Where(x=>x.CategoryName == categoryname).Where(x=>x.MakeName == makename).ToListAsync();
+            var productList = await this._context.Products.Where(x=>x.CategoryId == categoryId).Where(x=>x.MakeId == makeId).ToListAsync();
             return productList;            
         }
 
@@ -65,9 +60,9 @@ namespace SimplyHorsePower.Services
             await _context.SaveChangesAsync();           
         }
 
-        public async void UpdatePricingByMakeAsync(string makename, double percentAdjust)
+        public async void UpdatePricingByMakeAsync(string makeid, double percentAdjust)
         {
-            var ProductList =await GetFilteredProductsByMakeAsync(makename);
+            var ProductList =await GetFilteredProductsByMakeAsync(makeid);
             foreach (var product in ProductList)
             {
                 product.ProductPrice = product.ProductPrice * percentAdjust;
@@ -77,9 +72,9 @@ namespace SimplyHorsePower.Services
             
         }
 
-        public async void UpdatePricingByCategoryAsync(string categoryname, double percentAdjust)
+        public async void UpdatePricingByCategoryAsync(string categoryid, double percentAdjust)
         {
-            var ProductList = await GetFilteredProductsByCategoryAsync(categoryname);
+            var ProductList = await GetFilteredProductsByCategoryAsync(categoryid);
             foreach (var product in ProductList)
             {
                 product.ProductPrice = product.ProductPrice * percentAdjust;
@@ -87,9 +82,9 @@ namespace SimplyHorsePower.Services
             }
         }
 
-        public async void UpdatePricingByMakeCatAsync(string categoryname, string makename, double percentAdjust)
+        public async void UpdatePricingByMakeCatAsync(string categoryid, string makeid, double percentAdjust)
         {
-            var ProductList = await GetFilteredProductsByCatMakeAsync(categoryname, makename);
+            var ProductList = await GetFilteredProductsByCatMakeAsync(categoryid, makeid);
             foreach (var product in ProductList)
             {
                 product.ProductPrice = product.ProductPrice * percentAdjust;
@@ -99,5 +94,14 @@ namespace SimplyHorsePower.Services
         }
 
 
+   
+        public async Task<bool> AddNewProductAsync(Product name)
+        {
+          
+            await _context.Products.AddAsync(name);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+    
     }
 }

@@ -3,12 +3,10 @@
     public class BuildGalleryImageService
     {
         readonly ApplicationDbContext _context;
-        readonly ILogger _logger;
 
-        public BuildGalleryImageService(ApplicationDbContext context, ILoggerFactory factory)
+        public BuildGalleryImageService(ApplicationDbContext context)
         {
             this._context = context;
-            this._logger = factory.CreateLogger<BuildGalleryImageService>();
         }
 
 
