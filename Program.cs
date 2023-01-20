@@ -33,8 +33,7 @@ builder.Services.AddScoped<ShoppingCartService>();
 builder.Services.AddScoped<CartItemService>();
 builder.Services.AddScoped<CustomerBuildsService>();
 builder.Services.AddScoped<BuildGalleryImageService>();
-builder.Services.AddScoped<AddProductModel>();
-
+builder.Services.AddScoped<FileUploaderService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

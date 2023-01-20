@@ -1,15 +1,18 @@
 ﻿
 
+using static SimplyHorsePower.Services.ProductService;
+
 namespace SimplyHorsePower.Services
 {
     public class ProductService
     {
         readonly ApplicationDbContext _context;
-       
+        //readonly FileUploaderService _fileUploaderContext;
 
         public ProductService(ApplicationDbContext context)
         {
             this._context = context;
+            //this._fileUploaderContext = fileUploaderService;
           
         }
        
@@ -97,8 +100,8 @@ namespace SimplyHorsePower.Services
    
         public async Task<bool> AddNewProductAsync(Product name)
         {
-          
-            await _context.Products.AddAsync(name);
+            var product = name;
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
             return true;
         }
