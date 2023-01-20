@@ -19,6 +19,7 @@ namespace SimplyHorsePower.Services
   
         public async Task<bool> DeleteProductAsync(Product product)
         {
+            
             _context.Remove(product);
             await _context.SaveChangesAsync();
             return true;

@@ -1,7 +1,10 @@
-﻿@page "/DeleteProject/{Id}"
+﻿@page "/DeleteProduct/{Id}"
+@using System.IO
 @using SimplyHorsePower.Data
 @inject ProductService productService
 @inject NavigationManager NavigationManager
+@inject ILogger<DeleteProduct> Logger
+@inject IWebHostEnvironment env
 
 <h3>DeleteProduct</h3>
 <h3>@productObject.ProductName</h3>
@@ -30,7 +33,11 @@
     }
     protected async void RemoveProduct()
     {
+        var path = $"{env.WebRootPath}\\{productObject.MainProductImageLocation}";
+        System.IO.File.Delete(path);      
+
         await productService.DeleteProductAsync(productObject);
+
         NavigationManager.NavigateTo("./productsMenu");
     }
     void Cancel()
@@ -38,3 +45,4 @@
         NavigationManager.NavigateTo("./productsMenu");
     }
 }
+
