@@ -1,5 +1,47 @@
-﻿<h3>EditProduct</h3>
+﻿@page "/EditProduct/{Id}"
+@inject ProductService productService
+@inject NavigationManager NavigationManager
+<h3>EditProduct</h3>
+<h3>@productObject.ProductName</h3>
+<div>
+    <form method="post" asp-page-handler="Submit">
+        <label>Product Name:</label>
+        <input type="text" @bind="productObject.ProductName"><br />
+        <label>Product description:</label>
+        <input type="text" @bind="productObject.ProductDescription"><br />
+        <label>Product Price:</label>
+        <input type="hidden" @bind="productObject.ProductId">
+        <input type="hidden" @bind="productObject.MainProductImageLocation">
+        <input type="hidden" @bind="productObject.MakeId">
+        <input type="hidden" @bind="productObject.CategoryId">
+        <input type="text" @bind="productObject.ProductPrice"><br />
+        <input type="hidden" @bind="productObject.ProductId">
+        <input type="submit" @onkeypress="@UpdateProduct" class="btn btn-primary" @onclick="@UpdateProduct" value="Save" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
 
+    </form>
+</div>
 @code {
 
+    [Parameter]
+    public string Id { get; set; }
+
+    Product productObject = new Product();
+
+    string strError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        productObject = await Task.Run(() => productService.GetAProductAsync(Convert.ToInt32(Id)));
+
+    }
+    protected async void UpdateProduct()
+    {
+        await productService.UpdateProductAsync(productObject);
+        NavigationManager.NavigateTo("./ProductsMenu");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./ProductsMenu");
+    }
 }

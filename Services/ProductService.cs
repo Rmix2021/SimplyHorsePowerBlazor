@@ -39,7 +39,7 @@ namespace SimplyHorsePower.Services
 
         public async Task<List<Product>> GetFilteredProductsByMakeAsync(string makeId)
         {
-            var productList = await this._context.Products.Where(x =>x.MakeId == makeId).ToListAsync();
+            var productList = await _context.Products.Where(x =>x.MakeId == makeId).ToListAsync();
             return productList;
         }
 
@@ -55,13 +55,11 @@ namespace SimplyHorsePower.Services
             return productList;            
         }
 
-        public async void UpdateProductAsync(int productid, string productname, double productprice, string productdescription )
+        public async Task<bool>UpdateProductAsync(Product product)
         {
-            var updateProduct = _context.Products.Find(productid);
-            updateProduct.ProductName = productname;
-            updateProduct.ProductPrice = productprice;
-            updateProduct.ProductDescription = productdescription;
-            await _context.SaveChangesAsync();           
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async void UpdatePricingByMakeAsync(string makeid, double percentAdjust)
@@ -106,6 +104,57 @@ namespace SimplyHorsePower.Services
             await _context.SaveChangesAsync();
             return true;
         }
-    
+
+        public List<Product> GetFilteredProductsByMake(string makeId)
+        {
+            var productList = _context.Products.Where(x => x.MakeId == makeId).ToList();
+            return productList;
+        }
+
+        public List<Product> GetFilteredProductsByCategory(string categoryId)
+        {
+            var productList = this._context.Products.Where(x => x.CategoryId == categoryId).ToList();
+            return productList;
+        }
+
+        public List<Product> GetFilteredProductsByCatMake(string categoryId, string makeId)
+        {
+            var productList = this._context.Products.Where(x => x.CategoryId == categoryId).Where(x => x.MakeId == makeId).ToList();
+            return productList;
+        }
+
+        public void UpdatePricingByMake(string makeid, double percentAdjust)
+        {
+            var ProductList = GetFilteredProductsByMake(makeid);
+            foreach (var product in ProductList)
+            {
+                product.ProductPrice = product.ProductPrice * percentAdjust;
+                _context.SaveChanges();
+
+            }
+
+        }
+
+        public void UpdatePricingByCategory(string categoryid, double percentAdjust)
+        {
+            var ProductList = GetFilteredProductsByCategory(categoryid);
+            foreach (var product in ProductList)
+            {
+                product.ProductPrice = product.ProductPrice * percentAdjust;
+                _context.SaveChanges();
+            }
+        }
+
+        public void UpdatePricingByMakeCat(string categoryid, string makeid, double percentAdjust)
+        {
+            var ProductList = GetFilteredProductsByCatMake(categoryid, makeid);
+            foreach (var product in ProductList)
+            {
+                product.ProductPrice = product.ProductPrice * percentAdjust;
+                _context.SaveChanges();
+
+            }
+        }
+
     }
 }

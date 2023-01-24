@@ -1,5 +1,156 @@
-﻿<h3>EditPricesByMakeCat</h3>
+﻿@page "/EditPricesByMakeCat"
+@using SimplyHorsePower.Data
+
+
+@inject ProductService productService
+@inject CategoryService categoryService
+@inject MakeService makeService
+@inject NavigationManager NavigationManager
+
+<h3>EditPricesByMakeCat</h3>
+
+        <form>
+            <InputSelect @bind-Value="makeId" class="form-control" style="width:min-content">
+        <option value="">Brand</option>
+                @foreach (var make in MakeList)
+                {
+                    <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
+                }
+            </InputSelect>
+
+            <InputSelect @bind-Value="categoryId" class="form-control" style="width:min-content">
+                <option value="">Category</option>
+                @foreach (var category in CategoryList)
+                {
+                    <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
+                }
+            </InputSelect>
+                <label>Percentage to adjust</label>
+                <input type="number" step="0.01" @bind="percentAdjust" /><br />
+@*                <input type="submit" value="Submit" class="btn btn-info">*@ 
+
+                <input type="submit" @onkeypress="@percentAdjusted" class="btn btn-primary" @onclick="@percentAdjusted" value="Save" />
+
+              
+            <p>Remember percent to add is 1.* and percent to lower is 0.* </p>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Products</th>
+                <th>Brand</th>
+                        <th>Category</th>
+                        <th>Product Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in products)
+                    {
+                        <tr>
+                            <td>@product.ProductName</td>
+
+                    <td>
+
+                        @foreach (var make in MakeList)
+                        {
+                            if (make.MakeId.ToString() == product.MakeId)
+                            {
+                                @make.MakeName
+
+                            }
+                        }
+                    </td>
+                           <td>
+
+                         @foreach(var cat in CategoryList)
+                        {
+                            if(cat.CategoryId.ToString() == product.CategoryId)
+                            {
+                                @cat.CategoryName
+
+                            }
+                        }
+                            </td>          
+                           
+                            <td>@product.ProductPrice</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
 @code {
+    private List<Product> products { get; set; } = new List<Product>();
 
+    [BindProperty]
+    public string makeName { get; set; }
+
+    [BindProperty]
+    public string categoryName { get; set; }
+
+    [BindProperty]
+    public string makeId { get; set; }
+
+    [BindProperty]
+    public string categoryId { get; set; }
+
+    [BindProperty]
+    public List<Category> CategoryList { get; set; } = new List<Category>();
+
+    [BindProperty]
+    public List<Make> MakeList { get; set; } = new List<Make>();
+
+    public double percentAdjust { get; set; }
+
+    public int productid { get; set; }
+
+    [BindProperty]
+    public string CurrentCatName { get; set; }
+   
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        MakeList = await makeService.GetAllMakesAsync();
+        //MakeDropdownList.Insert(0, new Make("Select one", null, false));
+        CategoryList = await categoryService.GetAllCategoriesAsync();
+        //CategoryList.Insert(0, new SelectListItem("Select one", null, false));
+        products = await productService.GetAllProductsAsync();
+    }
+
+
+    protected void percentAdjusted()
+    {
+
+        if (makeId != null && categoryId == null)
+        {
+            productService.UpdatePricingByMake(makeId, percentAdjust);
+
+            NavigationManager.NavigateTo("./EditPricesByMakeCat");
+        }
+
+        else if (categoryId != null && makeId == null)
+        {
+            productService.UpdatePricingByCategory(categoryId, percentAdjust);
+            NavigationManager.NavigateTo("./EditPricesByMakeCat");
+        }
+        else if (makeId != null && categoryId != null)
+        {
+            productService.UpdatePricingByMakeCat(categoryId, makeId, percentAdjust);
+            NavigationManager.NavigateTo("./EditPricesByMakeCat");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("./EditPricesByMakeCat");
+        }
+        
+    }
+
+    void Cancel()
+    {
+
+        NavigationManager.NavigateTo("./EditPricesByMakeCat", true);
+    }
 }

@@ -17,16 +17,16 @@
             <input type="number" step="0.01" @bind="productObject.ProductPrice"><br />
             <label>Product Description:</label>
             <input type="text" @bind="productObject.ProductDescription"><br />
-            <label>Manufacture:</label>
+        <label>Brand:</label>
             <InputSelect @bind-Value="productObject.MakeId" class="form-control" style="width:min-content">
-                <option value="">--Select--</option>
+                <option value="">Brand</option>
                 @foreach (var make in MakeList)
                 {
                     <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
                 }
             </InputSelect>
             <InputSelect @bind-Value="productObject.CategoryId" class="form-control" style="width:min-content">
-                <option value="">--Select--</option>
+                <option value="">Category</option>
                 @foreach (var category in CategoryList)
                 {
                     <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
@@ -34,9 +34,9 @@
             </InputSelect>
 @*            <input type="file" @bind="productObject.MainImageData"><br />*@
             <InputFile OnChange="OnInputFileChange" />
-            <label>Max file size:<input type="number" @bind="maxFileSize" /></label>
+ @*           <label>Max file size:<input type="number" @bind="maxFileSize" /></label>
             <label>Max allowed files:<input type="number" @bind="maxAllowedFiles" /></label>
-            <label>Upload up to @maxAllowedFiles of up to @maxFileSize bytes:</label>
+            <label>Upload up to @maxAllowedFiles of up to @maxFileSize bytes:</label>*@
             <br /><br />
 
             <input type="button" class="btn btn-primary" @onclick="@CreateNewProductAsync" value="Save" />
@@ -95,8 +95,8 @@
         foreach (var file in selectedFiles)
         {
             Stream stream = file.OpenReadStream();
-            var path = $"{env.WebRootPath}\\{file.Name}";
-            productObject.MainProductImageLocation = file.Name;
+            var path = $"{env.WebRootPath}\\ProductMainImages\\{file.Name}";
+            productObject.MainProductImageLocation = $"\\ProductMainImages\\{file.Name}";
             FileStream fs = File.Create(path);
             await stream.CopyToAsync(fs);
             stream.Close();

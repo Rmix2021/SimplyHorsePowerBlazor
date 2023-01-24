@@ -23,9 +23,14 @@
         public string CategoryId { get; set; }
 
         [ForeignKey("MakeId")]
-        public string MakeId { get; set; }      
+        public string MakeId { get; set; }
 
         //[NotMapped]
+        //public string CategoryName { get; set; }
+
+        //[NotMapped]
+        //public string MakeName { get; set; }
+
         //public string MainBase64Image
         //{
         //    get
@@ -38,7 +43,7 @@
         //    }
         //}
 
-       
+
 
 
     }

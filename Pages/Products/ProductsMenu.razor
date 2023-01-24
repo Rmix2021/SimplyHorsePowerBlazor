@@ -17,27 +17,36 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-           <form method="post" asp-page-handler="Submit">
-              <InputSelect @bind-Value="makeName" class="form-control" style="width:min-content">
-            <option value="">--Select--</option>
+           <form >
+              <InputSelect @bind-Value="makeName"  class="form-control" style="width:min-content">
+                    <option value="">Brand</option>
             @foreach (var make in MakeList)
             {
                 <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
             }
         </InputSelect>
+          
         <InputSelect @bind-Value="categoryName" class="form-control" style="width:min-content">
-            <option value="">--Select--</option>
+            <option value="">Category</option>
             @foreach (var category in CategoryList)
             {
                 <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
             }
         </InputSelect>
-                <input type="button" class="btn btn-danger" @onclick="@SortDropdown" value="Sort" />
-                </form>
-            <div></div>
-            <form method="get">
-                <input type="button" class="btn btn-warning" @onclick="@Cancel" value="Reset">
             </form>
+      <form>
+                <input class="btn btn-danger" @onclick="@SortDropdown" value="Sort" />
+
+      </form>
+
+                 <form>
+                    <input class="btn btn-warning" @onclick="@Cancel" value="Reset">
+
+                 </form> 
+            
+
+        
+            
             
         </div>
 
@@ -80,17 +89,21 @@
 
 
 @code {
+   
+    private List<Product> products { get; set; }
 
-    private List<Product> products;
     [BindProperty]
     public string makeName { get; set; }
+
     [BindProperty]
     public string categoryName { get; set; }
 
     [BindProperty]
     public List<Category> CategoryList { get; set; } = new List<Category>();
+
     [BindProperty]
     public List<Make> MakeList { get; set; } = new List<Make>();
+
 
 
     protected override async Task OnInitializedAsync()
@@ -102,19 +115,19 @@
         products = await productService.GetAllProductsAsync();
     }  
 
-    protected async Task SortDropdown()
+    protected void SortDropdown()
     {
-        if (makeName != "Select" && categoryName == "Select")
+        if (makeName != null && categoryName == null)
         {
-            products = await productService.GetFilteredProductsByMakeAsync(makeName);
+            products = productService.GetFilteredProductsByMake(makeName);
         }
-        else if (categoryName != "Select" && makeName == "Select")
+        else if (categoryName != null && makeName == null)
         {
-            products = await productService.GetFilteredProductsByCategoryAsync(categoryName);
+            products = productService.GetFilteredProductsByCategory(categoryName);
         }
-        else if (makeName != "Select" && categoryName != "Select")
+        else if (makeName != null && categoryName != null)
         {
-            products = await productService.GetFilteredProductsByCatMakeAsync(categoryName, makeName);
+            products = productService.GetFilteredProductsByCatMake(categoryName, makeName);
         }
         else
         {
@@ -124,6 +137,7 @@
 
     void Cancel()
     {
-        NavigationManager.NavigateTo("./ProductsMenu");
+   
+        NavigationManager.NavigateTo("./ProductsMenu", true);
     }
 }
