@@ -1,5 +1,57 @@
-﻿<h3>DeleteProductGalleryImage</h3>
+﻿@page "/DeleteProductGalleryImage/{Id}"
+@using System.IO
+@using SimplyHorsePower.Data
+@inject ProductGalleryImageService productGalleryImageService
+@inject NavigationManager NavigationManager
+@inject ProductService productService
+@inject CategoryService categoryService
+@inject MakeService makeService
+@inject ILogger<DeleteProductGalleryImage> Logger
+@inject IWebHostEnvironment env
+
+<h3>DeleteProductGalleryImage</h3>
+
+
+<h3>@productGalleryImageObject.ProductGalleryImageName</h3>
+<h3>Are you sure want to delete this?</h3>
+
+<div>
+    <form method="post" asp-page-handler="Delete">
+        <input type="hidden" asp-for="@productGalleryImageObject.ProductGalleryImageId" />
+        <input type="button" class="btn btn-danger" @onclick="@RemoveProductGalleryImage" value="Delete" />
+        <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+    </form>
+</div>
+
+
+
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
 
+
+    public ProductGalleryImage productGalleryImageObject = new ProductGalleryImage();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        productGalleryImageObject = await Task.Run(() => productGalleryImageService.GetAProductGalleryImageAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void RemoveProductGalleryImage()
+    {
+        var path = $"{env.WebRootPath}\\{productGalleryImageObject.ProductGalleryImageLocation}";
+        System.IO.File.Delete(path);
+
+        await productGalleryImageService.DeleteProductGalleryImageAsync(productGalleryImageObject);
+
+        NavigationManager.NavigateTo("/ProductGalleryImagesMenu/"+Id);
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./ProductGalleryImagesMenu/"+Id);
+    }
 }

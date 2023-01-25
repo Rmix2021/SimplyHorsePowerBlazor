@@ -36,7 +36,13 @@
             ProductGalleryImage productGalleryImage = await _context.productGalleryImages.FirstOrDefaultAsync(c => c.ProductGalleryImageId.Equals(Id));
             return productGalleryImage;
         }
-      
+        public async Task<bool> DeleteProductGalleryImageAsync(ProductGalleryImage productGalleryImage)
+        {
+
+            _context.Remove(productGalleryImage);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
     }
 }

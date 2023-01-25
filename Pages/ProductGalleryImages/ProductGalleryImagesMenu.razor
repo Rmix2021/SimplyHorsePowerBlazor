@@ -1,5 +1,72 @@
-﻿<h3>ProductGalleryImagesMenu</h3>
+﻿@page "/ProductGalleryImagesMenu/{Id}"
+@using SimplyHorsePower.Data
+@inject ProductGalleryImageService productGalleryImageService
+@inject NavigationManager NavigationManager
+@inject ProductService productService
+@inject CategoryService categoryService
+@inject MakeService makeService
 
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mt-4 mb-4">ProductGalleryImagesMenu</h2>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <img src="@productObject.MainProductImageLocation" class="card-img img-fluid">
+            <p>^^^^ Main Photo ^^^^</p>
+        </div>
+
+        <div>
+            @if (ProductGalleryImages.Count >= 0 || ProductGalleryImages.Count != null)
+            {
+                @foreach (var productgalleryimage in ProductGalleryImages)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <!-- Bootstrap 5 card box -->
+                        <div class="card-box">
+                            <div class="card-thumbnail">
+                                <img src="@productgalleryimage.ProductGalleryImageLocation" class="card-img img-fluid">
+                            </div>
+                            <h3><a href="#" class="mt-2 text-danger">@productgalleryimage.ProductGalleryImageName</a></h3>
+                            <a type="button" href="DeleteProductGalleryImage/@productgalleryimage.ProductGalleryImageId" class="btn btn-danger float-left">Remove</a><br />
+                        </div>
+                        <br /><br />
+                    </div>
+                }
+            }
+            else
+            {
+                <div><h3>There are no photos uploaded at this time</h3></div>
+            }
+        </div>
+    
+
+    </div>
+</div>
+<div>
+    <a href="AddProductGalleryImage/@productObject.ProductId"  class="btn btn-success">Add another Photo</a>
+    <br /><br />
+</div>
 @code {
+    [Parameter]
+    public string Id { get; set; }
+
+
+    public Product productObject = new Product();
+
+
+    public List<ProductGalleryImage> ProductGalleryImages = new List<ProductGalleryImage>();
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        productObject = await Task.Run(() => productService.GetAProductAsync(Convert.ToInt32(Id)));
+        ProductGalleryImages = productGalleryImageService.GetAllFilteredProductGalleryImages(Convert.ToInt32(Id));
+    }
 
 }

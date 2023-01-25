@@ -17,7 +17,6 @@
         [Required]
         public string MainProductImageLocation { get; set; }
 
-        public List<ProductGalleryImage> ProductGalleryImages { get; set; } = new List<ProductGalleryImage>();
 
         [ForeignKey("CategoryId")]
         public string CategoryId { get; set; }
@@ -25,25 +24,8 @@
         [ForeignKey("MakeId")]
         public string MakeId { get; set; }
 
-        //[NotMapped]
-        //public string CategoryName { get; set; }
-
-        //[NotMapped]
-        //public string MakeName { get; set; }
-
-        //public string MainBase64Image
-        //{
-        //    get
-        //    {
-        //        if (this.MainProductImage == null)
-        //        {
-        //            return String.Empty;
-        //        }
-        //        return Convert.ToBase64String(this.MainProductImage);
-        //    }
-        //}
-
-
+        [NotMapped]
+        public List<ProductGalleryImage> ProductGalleryImages { get; set; } = new List<ProductGalleryImage>();
 
 
     }

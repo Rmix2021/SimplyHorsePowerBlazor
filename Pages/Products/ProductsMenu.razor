@@ -10,76 +10,74 @@
     <NavLink class="nav-link" href="AddProduct">
         <button class="btn btn-primary">Add new Product</button>
     </NavLink>
-    <NavLink class="nav-link" href="EditPricesByMakeCat">
+
+<NavLink class="nav-link" href="EditPricesByMakeCat">
         <button class="btn btn-primary">Edit Product bulk pricing</button>
     </NavLink>
 
 <div class="container">
     <div class="row">
         <div class="col-12">
-           <form >
-              <InputSelect @bind-Value="makeName"  class="form-control" style="width:min-content">
+            <form >
+                <InputSelect @bind-Value="makeName"  class="form-control" style="width:min-content">
                     <option value="">Brand</option>
-            @foreach (var make in MakeList)
-            {
-                <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
-            }
-        </InputSelect>
+                        @foreach (var make in MakeList)
+                        {
+                            <option value="@make.MakeId" style="width:auto">@make.MakeName</option>
+                        }
+                </InputSelect>
           
-        <InputSelect @bind-Value="categoryName" class="form-control" style="width:min-content">
-            <option value="">Category</option>
-            @foreach (var category in CategoryList)
-            {
-                <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
-            }
-        </InputSelect>
+                <InputSelect @bind-Value="categoryName" class="form-control" style="width:min-content">
+                    <option value="">Category</option>
+                        @foreach (var category in CategoryList)
+                        {
+                            <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
+                        }
+                </InputSelect>
             </form>
-      <form>
+
+            <form>
                 <input class="btn btn-danger" @onclick="@SortDropdown" value="Sort" />
+            </form>
 
-      </form>
-
-                 <form>
-                    <input class="btn btn-warning" @onclick="@Cancel" value="Reset">
-
-                 </form> 
-            
-
-        
-            
-            
+            <form>
+            <input class="btn btn-warning" @onclick="@Cancel" value="Reset">
+            </form>
         </div>
+
+
 
         <div class="products">
             <div class="row no-gutters">
 
-            @if (products != null)
-            {
+                @if (products != null)
+                    {
 
-                @foreach (var product in products)
-                {
+                    @foreach (var product in products)
+                    {
                     <div class="col-md-3 mt-3 card flex-fill card-box card-body bg-light text-center">
-                        <div class="card-img-actions card-thumbnail">
-                            <img src="@product.MainProductImageLocation" class="card-img img-fluid">
+                            <div class="card-img-actions col-md-6 col-lg-4">
+                        <div class="container-fluid flex-fill">
+                        <img src="@product.MainProductImageLocation" class="card-img img-fluid">
                         </div>
-                        <div class="container-fluid flex-fill"></div>
-                        <h3><a href="#" class="mt-2 text-danger">@product.ProductName</a></h3>
+
+                            <h3><a href="#" class="mt-2 text-danger">@product.ProductName</a></h3>
                             <p class="text-secondary">@product.ProductDescription</p>
                             <a type="button" href="DeleteProduct/@product.ProductId"><span class="oi oi-pencil" aria-hidden="true">Remove</span></a>
                             <a type="button" href="EditProduct/@product.ProductId"><span class="oi oi-pencil" aria-hidden="true">Edit</span></a>
-
-                        <a type="button" href="/ProductGalleryImages/ProductGalleryImagesMenu@product.ProductId" class="btn btn-success float-left">Photo Gallery Menu</a>
-                    </div>
-                }
-            }
-            else
-            {
-              
-                    <div>
-                        <h1>No Products yet!</h1>
+                            <a type="button" href="ProductGalleryImagesMenu/@product.ProductId"><span class="oi oi-pencil" aria-hidden="true">Photo Gallery Menu</span></a>
                         </div>
+                    </div>
+                    }
+                    }
+                else
+                {
               
-            }
+                <div>
+                <h1>No Products yet!</h1>
+                </div>
+              
+                }
 
             </div>
         </div>

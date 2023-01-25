@@ -12,7 +12,6 @@
         public DbSet<ProductGalleryImage> productGalleryImages { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-        public List<IFormFile> File { get; internal set; }
         public DbSet<CustomerBuild> customerBuilds { get; set; }
         public DbSet<BuildGalleryImage> buildGalleryImages { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿@page "/EditProduct/{Id}"
 @inject ProductService productService
 @inject NavigationManager NavigationManager
+
 <h3>EditProduct</h3>
 <h3>@productObject.ProductName</h3>
 <div>
@@ -26,9 +27,10 @@
     [Parameter]
     public string Id { get; set; }
 
+
     Product productObject = new Product();
 
-    string strError = "";
+
 
     protected override async Task OnInitializedAsync()
     {

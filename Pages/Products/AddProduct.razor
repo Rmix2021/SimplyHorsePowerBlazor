@@ -32,12 +32,9 @@
                     <option value="@category.CategoryId" style="width:auto">@category.CategoryName</option>
                 }
             </InputSelect>
-@*            <input type="file" @bind="productObject.MainImageData"><br />*@
+
             <InputFile OnChange="OnInputFileChange" />
- @*           <label>Max file size:<input type="number" @bind="maxFileSize" /></label>
-            <label>Max allowed files:<input type="number" @bind="maxAllowedFiles" /></label>
-            <label>Upload up to @maxAllowedFiles of up to @maxFileSize bytes:</label>*@
-            <br /><br />
+             <br /><br />
 
             <input type="button" class="btn btn-primary" @onclick="@CreateNewProductAsync" value="Save" />
    
@@ -59,15 +56,9 @@
     public List<Category> CategoryList { get; set; } = new List<Category>();
 
     string Message = "No file(s) selected";
-    IReadOnlyList<IBrowserFile> selectedFiles;
-
-    //public byte[] ProductImgUpload { get; set; }
+    IReadOnlyList<IBrowserFile> selectedFiles; 
 
     private List<IBrowserFile> loadedFiles = new();
-    private long maxFileSize = 1024 * 15;
-    private int maxAllowedFiles = 3;
-    private bool isLoading;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,7 +85,7 @@
     {
         foreach (var file in selectedFiles)
         {
-            Stream stream = file.OpenReadStream();
+            Stream stream = file.OpenReadStream(maxAllowedSize: 1024 * 100000);
             var path = $"{env.WebRootPath}\\ProductMainImages\\{file.Name}";
             productObject.MainProductImageLocation = $"\\ProductMainImages\\{file.Name}";
             FileStream fs = File.Create(path);

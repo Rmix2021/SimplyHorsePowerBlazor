@@ -221,9 +221,9 @@ namespace SimplyHorsePower.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("BuildGalleryByte")
+                    b.Property<string>("BuildGalleryImageLocation")
                         .IsRequired()
-                        .HasColumnType("longblob");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("BuildGalleryImageName")
                         .IsRequired()
@@ -299,9 +299,9 @@ namespace SimplyHorsePower.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<byte[]>("MainBuildImage")
+                    b.Property<string>("MainBuildImageLoation")
                         .IsRequired()
-                        .HasColumnType("longblob");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CustomerBuildId");
 
@@ -361,7 +361,7 @@ namespace SimplyHorsePower.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductGalleryImageLoation")
+                    b.Property<string>("ProductGalleryImageLocation")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -373,8 +373,6 @@ namespace SimplyHorsePower.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductGalleryImageId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("productGalleryImages");
                 });
@@ -450,13 +448,11 @@ namespace SimplyHorsePower.Migrations
 
             modelBuilder.Entity("SimplyHorsePower.Data.BuildGalleryImage", b =>
                 {
-                    b.HasOne("SimplyHorsePower.Data.CustomerBuild", "CustomerBuild")
+                    b.HasOne("SimplyHorsePower.Data.CustomerBuild", null)
                         .WithMany("BuildGalleryImages")
                         .HasForeignKey("CustomerBuildId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CustomerBuild");
                 });
 
             modelBuilder.Entity("SimplyHorsePower.Data.CartItem", b =>
@@ -478,25 +474,9 @@ namespace SimplyHorsePower.Migrations
                     b.Navigation("ShoppingCart");
                 });
 
-            modelBuilder.Entity("SimplyHorsePower.Data.ProductGalleryImage", b =>
-                {
-                    b.HasOne("SimplyHorsePower.Data.Product", "Product")
-                        .WithMany("ProductGalleryImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("SimplyHorsePower.Data.CustomerBuild", b =>
                 {
                     b.Navigation("BuildGalleryImages");
-                });
-
-            modelBuilder.Entity("SimplyHorsePower.Data.Product", b =>
-                {
-                    b.Navigation("ProductGalleryImages");
                 });
 
             modelBuilder.Entity("SimplyHorsePower.Data.ShoppingCart", b =>

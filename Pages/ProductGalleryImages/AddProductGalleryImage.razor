@@ -1,5 +1,85 @@
-﻿<h3>AddProductGalleryImage</h3>
+﻿@page "/AddProductGalleryImage/{Id}"
+@using SimplyHorsePower.Data
+@inject ProductGalleryImageService productGalleryImageService
+@inject NavigationManager NavigationManager
+@inject ProductService productService
+@inject CategoryService categoryService
+@inject MakeService makeService
+@inject ILogger<AddProductGalleryImage> Logger
+@inject IWebHostEnvironment env
 
+<h3>AddProductGalleryImage</h3>
+
+
+<div>
+    <form method="post" enctype="multipart/form-data" asp-page-handler="Submit">
+@*        <input type="hidden" @bind-value="productGalleryImageObject.ProductId"  @bind="productObject.ProductId"><br />
+*@        <label>Photo Name:</label>
+        <input type="text" @bind="productGalleryImageObject.ProductGalleryImageName"><br />
+        <label>Product Gallery Image:</label>
+        <InputFile OnChange="OnInputFileChange" />
+
+
+        <input type="button" class="btn btn-primary" @onclick="@AddNewImageAsync" value="Save" />
+    </form>
+</div>
 @code {
+    [Parameter]
+    public string Id { get; set; }
+
+    public ProductGalleryImage productGalleryImageObject = new ProductGalleryImage();
+
+    public Product productObject = new Product();
+
+    public int productid { get; set; }
+
+    string Message = "No file(s) selected";
+
+    IReadOnlyList<IBrowserFile> selectedFiles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productObject = await Task.Run(() => productService.GetAProductAsync(Convert.ToInt32(Id)));
+    }
+
+
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles.Count} file(s) selected";
+        this.StateHasChanged();
+
+        var file = selectedFiles.First();
+    }
+
+    private async void FileUpload()
+    {
+        foreach (var file in selectedFiles)
+        {
+            Stream stream = file.OpenReadStream(maxAllowedSize: 1024 * 100000);
+            var path = $"{env.WebRootPath}\\ProductGalleryImages\\{file.Name}";
+            productGalleryImageObject.ProductGalleryImageLocation = $"\\ProductGalleryImages\\{file.Name}";
+            FileStream fs = File.Create(path);
+            await stream.CopyToAsync(fs);
+            stream.Close();
+            fs.Close();
+        }
+        Message = $"{selectedFiles.Count} file(s) uploaded on server";
+        this.StateHasChanged();
+    }
+
+    protected async void AddNewImageAsync()
+    {
+        FileUpload();
+        productGalleryImageObject.ProductId = productObject.ProductId;
+        await productGalleryImageService.AddNewProductGalleryImage(productGalleryImageObject);
+        NavigationManager.NavigateTo("./ProductGalleryImagesMenu/" + productObject.ProductId);
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("./ProductGalleryImagesMenu/" + productObject.ProductId);
+    }
 
 }

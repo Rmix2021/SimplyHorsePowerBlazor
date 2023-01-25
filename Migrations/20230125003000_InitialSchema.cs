@@ -73,14 +73,14 @@ namespace SimplyHorsePower.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CategoryName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryID);
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -96,7 +96,8 @@ namespace SimplyHorsePower.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerBuildDescription = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MainBuildImage = table.Column<byte[]>(type: "longblob", nullable: false)
+                    MainBuildImageLoation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -120,6 +121,24 @@ namespace SimplyHorsePower.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "productGalleryImages",
+                columns: table => new
+                {
+                    ProductGalleryImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ProductGalleryImageName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductGalleryImageLocation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_productGalleryImages", x => x.ProductGalleryImageId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -130,10 +149,11 @@ namespace SimplyHorsePower.Migrations
                     ProductPrice = table.Column<double>(type: "double", nullable: false),
                     ProductDescription = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MainProductImage = table.Column<byte[]>(type: "longblob", nullable: false),
-                    CategoryName = table.Column<string>(type: "longtext", nullable: true)
+                    MainProductImageLocation = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MakeName = table.Column<string>(type: "longtext", nullable: true)
+                    CategoryId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MakeId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -293,7 +313,8 @@ namespace SimplyHorsePower.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     BuildGalleryImageName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    BuildGalleryByte = table.Column<byte[]>(type: "longblob", nullable: false),
+                    BuildGalleryImageLocation = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerBuildId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -304,29 +325,6 @@ namespace SimplyHorsePower.Migrations
                         column: x => x.CustomerBuildId,
                         principalTable: "customerBuilds",
                         principalColumn: "CustomerBuildId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "productGalleryImages",
-                columns: table => new
-                {
-                    ProductGalleryImageId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProductGalleryImageName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProductGalleryByte = table.Column<byte[]>(type: "longblob", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_productGalleryImages", x => x.ProductGalleryImageId);
-                    table.ForeignKey(
-                        name: "FK_productGalleryImages_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -411,11 +409,6 @@ namespace SimplyHorsePower.Migrations
                 name: "IX_CartItems_ShoppingCartId",
                 table: "CartItems",
                 column: "ShoppingCartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_productGalleryImages_ProductId",
-                table: "productGalleryImages",
-                column: "ProductId");
         }
 
         /// <inheritdoc />
@@ -461,10 +454,10 @@ namespace SimplyHorsePower.Migrations
                 name: "customerBuilds");
 
             migrationBuilder.DropTable(
-                name: "ShoppingCarts");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "ShoppingCarts");
         }
     }
 }
